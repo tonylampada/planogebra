@@ -24,14 +24,16 @@
 <body>
     <div id="editor">
         <h3>3D Object Editor</h3>
-        <textarea id="objectInput" rows="15" cols="30">cube 1 1 1 1 1 2
-sphere 2 2 2 1
-point 0 0 0
-line -10 0 0 10 0 0
-line 0 -3 0 0 3 0
-line 0 0 -2 0 0 2
-circle 0 0 0 -1 0 1 1
-#line 0 0 0 1 1 1</textarea>
+        <textarea id="objectInput" rows="15" cols="30"># sistema de coordenadas
+line -6 0 0 6 0 0 #ff0000
+line 0 -6 0 0 6 0 #00ff00
+line 0 0 -6 0 0 6 #0000ff
+# equinocio 21mar
+sphere 0 4 0 1 blue
+circle 0 4 0 .39 4 .92 1.1 orange
+line -.507 4 -1.196 .507 4 1.196 green
+line 0 4 -1.3 0 4 1.3 white
+#bruno globaloide</textarea>
         <br>
         <button onclick="loadObjects()">Load Objects</button>
     </div>
