@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js 3D Editor</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+        #editor {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 300px;
+            height: 400px;
+            z-index: 100;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="editor">
+        <h3>3D Object Editor</h3>
+        <textarea id="objectInput" rows="15" cols="30">cube 1 1 1 1 1 2
+sphere 2 2 2 1
+point 0 0 0
+line -10 0 0 10 0 0
+line 0 -3 0 0 3 0
+line 0 0 -2 0 0 2
+circle 0 0 0 -1 0 1 1
+#line 0 0 0 1 1 1</textarea>
+        <br>
+        <button onclick="loadObjects()">Load Objects</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="./planogebra.js"></script>
+</body>
+</html>
