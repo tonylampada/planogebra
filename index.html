@@ -11,20 +11,36 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            width: 300px;
-            height: 400px;
+            width: 500px;
+            height: 300px;
             z-index: 100;
             background: white;
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            transition: left 0.5s; /* Smooth transition for collapsing */
+        }
+        #toggleButton {
+            position: absolute;
+            top: 10px;
+            left: 320px; /* Position right outside the editor */
+            z-index: 101;
+        }
+        #topRightLabel {
+            position: absolute;
+            top: 10px;
+            right: 10px; /* Position at the top right corner */
+            z-index: 102; /* Ensure it's above other elements */
+            color: white;
         }
     </style>
 </head>
 <body>
+    <div id="topRightLabel">Your Text Here</div>
+    <button id="toggleButton" onclick="toggleEditor()">Toggle Editor</button>
     <div id="editor">
         <h3>3D Object Editor</h3>
-        <textarea id="objectInput" rows="15" cols="30"># sistema de coordenadas
+        <!-- <textarea id="objectInput" rows="15" cols="30"># sistema de coordenadas
 line -6 0 0 6 0 0 #ff0000
 line 0 -6 0 0 6 0 #00ff00
 line 0 0 -6 0 0 6 #0000ff
@@ -33,12 +49,90 @@ sphere 0 4 0 1 blue
 circle 0 4 0 .39 4 .92 1.1 orange
 line -.507 4 -1.196 .507 4 1.196 green
 line 0 4 -1.3 0 4 1.3 white
-#bruno globaloide</textarea>
-        <br>
+#bruno globaloide</textarea> -->
+
+<!-- <textarea id="objectInput" rows="15" cols="30">
+# sistema de coordenadas
+line -6 0 0 6 0 0 #ff0000
+#line 0 -6 0 0 6 0 #00ff00
+#line 0 0 -6 0 0 6 #0000ff
+
+#lua
+sphere 0 0 0 1.7 gray
+
+#sol
+sphere -150000 0 0 600 yellow
+line -150000 0 600 150000 0 -596.6 yellow
+line -150000 0 -600 150000 0 596.6 yellow
+line -150000 600 0 150000 -596.6 0 yellow
+line -150000 -600 - 150000 596.6 0 yellow
+line -150000 0 1.7 150000 0 1.7 red
+line -150000 0 -1.7 150000 0 -1.7 red
+line -150000 1.7 0 150000 1.7 0 red
+line -150000 -1.7 0 150000 -1.7 0 red
+camera 200 0 0 0 1.57 0
+    </textarea> -->
+
+    <textarea id="objectInput" rows="10" cols="60">
+// sistema de coordenadas
+let [xa, xb] = [v(-6,0,0), v(6,0,0)]
+let [ya, yb] = [v(0,-6,0), v(0,6,0)]
+let [za, zb] = [v(0,0,-6), v(0,0,6)]
+draw.line(xa, xb, "#ff0000")
+draw.line(ya, yb, "#00ff00")
+draw.line(za, zb, "#0000ff")
+
+let Rs = 600, Rl = 1.7, Rt = 6
+let Ds = 150000, Dt = 384
+
+draw.sphere(v(-Ds, 0, 0), Rs, "yellow") //sol
+draw.sphere(v(0, 0, 0), Rl, "gray") // lua
+draw.sphere(v(Dt, 0, 0), Rt, "blue") // terra
+
+let tgu = (Rs-Rl)/Ds // inclinacao da reta tangente ao sol e a lua (cone da umbra)
+let Dvu = Rl/tgu // distancia vertice umbra
+let Dccu = (Dvu - Ds)/2 // distancia centro cone umbra
+let Acu = Ds + Dvu // Altura do cone da umbra
+
+let tgp = (Rs + Rl)/Ds // inclinacao da reta tangente ao sol e a lua (cone da penumbra)
+let Dvp = Rl/tgp // distancia vertice penumbra
+let Dccp = (-Dvp + Dt)/2 // distancia centro cone penumbra
+let Acp = Dt + Dvp // Altura do cone da penumbra
+let Rcp = (Dvp + Dt) * tgp // raio do cone da penumbra
+
+// umbra da lua correta
+draw.cylinder(v(Dccu,0,0), v(1,0,0), Rs, 0, Acu, "yellow", .5)
+// umbra da lua do bruno
+draw.cylinder(v(Dccu,0,0), v(1,0,0), Rl, Rl, Acu, "red", .5) 
+// penumbra da lua correta
+draw.cylinder(v(Dccp,0,0), v(1,0,0), 0, Rcp, Acp, "green", .5)
+
+draw.camera(v(1,0,15), v(0,0,0))
+</textarea>
+        
+    <br>
         <button onclick="loadObjects()">Load Objects</button>
     </div>
+    <script>
+        let isEditorVisible = true;
+        function toggleEditor() {
+            const editor = document.getElementById('editor');
+            const toggleBtn = document.getElementById('toggleButton');
+            if (isEditorVisible) {
+                editor.style.left = '-510px'; // Move out of view
+                toggleBtn.style.left = '10px'; // Move button to the left edge
+            } else {
+                editor.style.left = '10px'; // Move back into view
+                toggleBtn.style.left = '320px'; // Return button to its original position
+            }
+            isEditorVisible = !isEditorVisible;
+        }
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/FirstPersonControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/FlyControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TrackballControls.js"></script>
     <script src="./planogebra.js"></script>
 </body>
 </html>
